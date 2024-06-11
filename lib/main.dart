@@ -1,8 +1,8 @@
 import 'dart:ffi';
 
 import 'package:flutter/material.dart';
-import 'package:quizzler/QuestionBank.dart';
-import 'package:quizzler/Qustion.dart';
+import 'QuestionBank.dart';
+import 'Qustion.dart';
 
 Questionbank quiz = Questionbank();
 void main() => runApp(Quizzler());
@@ -11,7 +11,12 @@ class Quizzler extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       home: Scaffold(
+        appBar: AppBar(
+          centerTitle: false,
+          title: Text("Java Quiz"),
+        ),
         backgroundColor: Colors.grey.shade900,
         body: SafeArea(
           child: Padding(
@@ -30,21 +35,18 @@ class QuizPage extends StatefulWidget {
 }
 
 class _QuizPageState extends State<QuizPage> {
-  List<Widget> scoreKeeper = [];
-
   var counter = 0;
+
   void checkAnswer(bool UserPickedQustion) {
     bool correctQuestion = quiz.getCorrectQuestoin();
     setState(() {
       if (quiz.isFinsh()) {
         _showSimpleDialog(context);
-        scoreKeeper = [];
+        print(quiz.getScore());
         quiz.reset();
       } else {
         if (correctQuestion == UserPickedQustion) {
-          scoreKeeper.add(Icon(Icons.check, color: Colors.green));
-        } else {
-          scoreKeeper.add(Icon(Icons.close, color: Colors.red));
+          quiz.updateScore();
         }
         quiz.nextQuestion();
       }
@@ -52,15 +54,17 @@ class _QuizPageState extends State<QuizPage> {
   }
 
   void _showSimpleDialog(BuildContext context) {
+    int myScore = quiz.getScore();
+    int listLength = quiz.getQuestion().length;
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Alert'),
-          content: Text('The Quesions is finshed '),
+          title: Text('your reslut'),
+          content: Text(quiz.showResult()),
           actions: [
             TextButton(
-              child: Text('OK'),
+              child: Text('you get $myScore from  $listLength'),
               onPressed: () {
                 Navigator.of(context).pop();
               },
@@ -138,7 +142,7 @@ class _QuizPageState extends State<QuizPage> {
         SingleChildScrollView(
           scrollDirection: Axis.horizontal,
           child: Row(
-            children: scoreKeeper,
+            children: [],
           ),
         )
       ],

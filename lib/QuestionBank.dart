@@ -42,7 +42,8 @@ class Questionbank {
         "A `finally` block in Java will not execute if the JVM exits during the try or catch block.",
         true),
   ];
-  int questionNumber = 0;
+  int _questionNumber = 0;
+  int _score = 0;
   List<Question> getQuestion() {
     return this._Question;
   }
@@ -50,7 +51,7 @@ class Questionbank {
   // go to next question in list
   void nextQuestion() {
     if (!isFinsh()) {
-      this.questionNumber++;
+      this._questionNumber++;
     } else {}
   }
 
@@ -59,7 +60,7 @@ class Questionbank {
   }
 
   Question getCurrentQuession() {
-    return this._Question[questionNumber];
+    return this._Question[_questionNumber];
   }
 
   bool getCorrectQuestoin() {
@@ -67,10 +68,24 @@ class Questionbank {
   }
 
   void reset() {
-    this.questionNumber = 0;
+    this._questionNumber = 0;
   }
 
   bool isFinsh() {
-    return questionNumber == this._Question.length - 1;
+    return _questionNumber == this._Question.length - 1;
+  }
+
+  void updateScore() {
+    _score++;
+  }
+
+  int getScore() {
+    return this._score;
+  }
+
+  String showResult() {
+    return ((this.getQuestion().length / 2) <= this._score)
+        ? "you pass"
+        : "you failed ";
   }
 }
